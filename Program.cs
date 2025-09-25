@@ -10,12 +10,25 @@ class Program
 
     static void Main(string[] args)
     {
-        Console.WriteLine("=== Missing Number Finder ===");
+        Console.WriteLine("=== Missing Number Finder using sort and search method ===\n");
+
+        // Initialize dependencies
+        IArrayValidator arrayValidator = new ArrayValidator();
+        IMissingNumberFinder strategy = new SortAndSearchStrategy(arrayValidator);
+        var solver = new MissingNumberSolver(strategy);
+
+        // Run tests and demonstrations
+        RunStrategyTests(solver);
         Console.WriteLine();
 
-        IMissingNumberFinder numberFinderStrategy = new BooleanListStrategy();
-        var solver = new MissingNumberSolver(numberFinderStrategy);
+        RunErrorStateTests(solver);
+        Console.WriteLine();
 
+        IMissingNumberFinder booleanArrayStrategy = new BooleanArrayStrategy(arrayValidator);
+        solver.setStrategy(booleanArrayStrategy);
+
+        Console.WriteLine("=== Missing Number Finder using boolean array strategy ===\n");
+        // Run tests and demonstrations
         RunStrategyTests(solver);
         Console.WriteLine();
 

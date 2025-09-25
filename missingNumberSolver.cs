@@ -4,11 +4,19 @@ namespace FindMissingNumberInArray;
 
 class MissingNumberSolver
 {
-    private readonly IMissingNumberFinder _numberFinder;
+    private IMissingNumberFinder _numberFinder;
 
     public MissingNumberSolver(IMissingNumberFinder numberFinder)
     {
         _numberFinder = numberFinder ?? throw new ArgumentNullException(nameof(numberFinder));
+    }
+
+    public void setStrategy(IMissingNumberFinder numberFinder)
+    {
+        if (numberFinder == null)
+            throw new ArgumentNullException(nameof(numberFinder));
+
+        _numberFinder = numberFinder;
     }
 
     public int Run(int[] array)

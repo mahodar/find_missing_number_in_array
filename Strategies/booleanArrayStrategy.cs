@@ -2,27 +2,19 @@ using FindMissingNumberInArray.Interfaces;
 
 namespace FindMissingNumberInArray.Strategies;
 
-class BooleanListStrategy : IMissingNumberFinder
+class BooleanArrayStrategy : IMissingNumberFinder
 {
 
-    private bool IsValidInput(int[] array)
+    private IArrayValidator _arrayCheck;
+
+    public BooleanArrayStrategy(IArrayValidator arrayCheck)
     {
-        if (array == null || array.Length == 0)
-        {
-            return false; // Invalid input
-        }
-
-        if (array.Any(num => num < 0))
-        {
-            return false; // Negative numbers are not allowed
-        }
-
-        return true;
+        _arrayCheck = arrayCheck;
     }
 
     public int FindMissingNumber(int[] array)
     {
-        if (!IsValidInput(array))
+        if (!_arrayCheck.ValidateInputs(array))
         {
             throw new ArgumentException("Invalid input");
         }

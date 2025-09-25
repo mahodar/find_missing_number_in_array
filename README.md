@@ -1,10 +1,10 @@
 # Find Missing Number in Array
 
-A C# console application that demonstrates finding missing number in an array using **SOLID principles**.
+A C# console application that demonstrates finding missing numbers in an array using **SOLID principles**.
 
 ## Overview
 
-This project implements a boolean array-based algorithm to find missing numbers in a sequence, following all five SOLID principles for maintainable, testable, and extensible code.
+This project implements multiple algorithms to find missing numbers in a sequence, following all five SOLID principles for maintainable, testable, and extensible code. The current implementation uses the `SortAndSearchStrategy` with validation provided by the `ArrayValidator`.
 
 ## SOLID Principles Implementation
 
@@ -12,15 +12,16 @@ This project implements a boolean array-based algorithm to find missing numbers 
 Each class has one reason to change:
 
 - **`IMissingNumberFinder`** - Defines the contract for finding missing numbers
-- **`BooleanListStrategy`** - Implements the boolean array algorithm
-- **`MissingNumberSolver`** - Coordinates the solving process with validation and display
+- **`SortAndSearchStrategy`** - Implements the sorting and searching algorithm
+- **`ArrayValidator`** - Validates input arrays for correctness
+- **`MissingNumberSolver`** - Coordinates the solving process with validation and strategy execution
 - **`Program`** - Handles application entry point and testing
 
 ### 2. **Open/Closed Principle (OCP)**
 The system is open for extension, closed for modification:
 
 - **New algorithms** can be added by implementing `IMissingNumberFinder` without changing existing code
-- **Different validation rules** can be added without modifying core logic
+- **Different validation rules** can be added by extending or modifying `ArrayValidator`
 - **Additional output formats** can be implemented without touching the algorithm
 
 ### 3. **Liskov Substitution Principle (LSP)**
@@ -28,14 +29,15 @@ Any implementation of `IMissingNumberFinder` can be substituted:
 
 ```csharp
 // Any strategy can be used interchangeably
-IMissingNumberFinder solver = new BooleanListStrategy();
-// Could be replaced with XORStrategy, HashSetStrategy, etc.
+IMissingNumberFinder solver = new SortAndSearchStrategy(new ArrayValidator());
+// Could be replaced with BooleanArrayStrategy, XORStrategy, etc.
 ```
 
 ### 4. **Interface Segregation Principle (ISP)**
 Interfaces are focused and specific:
 
 - **`IMissingNumberFinder`** defines a single method: `FindMissingNumber(int[] array)`
+- **`IArrayValidator`** defines methods for validating input arrays
 - Classes depend only on the methods they use, avoiding unnecessary dependencies
 
 ### 5. **Dependency Inversion Principle (DIP)**
@@ -60,25 +62,26 @@ Program.cs
     ↓
 MissingNumberSolver ← IMissingNumberFinder (Interface)
     ↓                        ↑
-Validation/Display    BooleanListStrategy (Implementation)
+Validation/Display    SortAndSearchStrategy (Implementation)
+    ↓
+ArrayValidator
 ```
 
-## Algorithm: Boolean Array Strategy
+## Algorithm: Sort and Search Strategy
 
-The implemented algorithm uses a boolean array to track which numbers are present:
+The implemented algorithm uses sorting and binary search to find missing numbers:
 
-1. **Validation**: Check for null/empty arrays and invalid ranges
-2. **Marking**: Create boolean array and mark existing numbers as `true`
-3. **Detection**: Find indices marked as `false` (missing numbers)
+1. **Validation**: Ensure the array is not null, empty, or contains invalid values
+2. **Sorting**: Sort the array to prepare for binary search
+3. **Detection**: Use binary search to identify missing numbers
 
-**Time Complexity**: O(n)  
-**Space Complexity**: O(n)
-
+**Time Complexity**: O(n log n) (due to sorting)  
+**Space Complexity**: O(1) (in-place sorting)
 
 ## Sample Output
 
 ```
-=== Missing Number Finder (Boolean Array Strategy) ===
+=== Missing Number Finder (Sort and Search Strategy) ===
 
 Test Case 1: [1,2,4,5,6] (Range 1-6)
 ✓ Missing number found: 3
